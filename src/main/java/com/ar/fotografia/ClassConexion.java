@@ -6,12 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 public class ClassConexion {
 
-/* 	// Método main: Muestra un menú de opciones y llama a los métodos correspondientes 
+	// Método main: Muestra un menú de opciones y llama a los métodos correspondientes 
 	// insertarUsuario, actualizarUsuario, eliminarUsuario, listarUsuarios
 	// según la opción seleccionada por el usuario.
     public static void main(String[] args) {
@@ -78,15 +79,28 @@ public class ClassConexion {
     private static void insertarUsuario(Connection cn, Scanner scan) {
         System.out.println("Ingrese su nombre: ");
         String nombre = scan.next();
-        System.out.println("Ingrese su clave: ");
-        String password = scan.next();
+        System.out.println("Ingrese su apellido: ");
+        String apellido = scan.next();
+        System.out.println("Ingrese su email: ");
+        String email = scan.next();
+        System.out.println("Ingrese su contrasena: ");
+        String contrasena = scan.next();
+        System.out.println("Ingrese su fecha de nacimiento: ");
+        Date fechaNacimiento = new Date();
+        java.sql.Date sqlFecha = new java.sql.Date(fechaNacimiento.getTime());
+        System.out.println("Ingrese su pais: ");
+        String pais = scan.next();
 
-        String insertQuery = "INSERT INTO usuario (name, clave) VALUES (?, ?)";
+        String insertQuery = "INSERT INTO usuarios (nombre, apellido, email, contrasena, fecha_nacimiento, pais) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstm = cn.prepareStatement(insertQuery)) 
         {
-           pstm.setString(2, password);
-           pstm.setString(1, nombre);
+            pstm.setString(1, nombre);
+            pstm.setString(2, apellido);
+            pstm.setString(3, email);
+            pstm.setString(4, contrasena);
+            pstm.setDate(5, sqlFecha);
+            pstm.setString(6, pais);
 
             pstm.executeUpdate();
 
@@ -102,18 +116,27 @@ public class ClassConexion {
     private static void actualizarUsuario(Connection cn, Scanner scan) {
         System.out.println("Ingrese el ID del usuario a actualizar: ");
         int id = scan.nextInt();
-        System.out.println("Ingrese el nuevo nombre: ");
+        System.out.println("Ingrese su nombre: ");
         String nombre = scan.next();
-        System.out.println("Ingrese la nueva clave: ");
-        String password = scan.next();
+        System.out.println("Ingrese su apellido: ");
+        String apellido = scan.next();
+        System.out.println("Ingrese su email: ");
+        String email = scan.next();
+        System.out.println("Ingrese su contrasena: ");
+        String contrasena = scan.next();
+        System.out.println("Ingrese su pais: ");
+        String pais = scan.next();
 
-        String updateQuery = "UPDATE usuario SET name = ?, clave = ? WHERE id_usuario = ?";
+        String updateQuery = "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, contrasena = ?, pais = ? WHERE id = ?";
 
         try (PreparedStatement pstm = cn.prepareStatement(updateQuery)) 
         {
             pstm.setString(1, nombre);
-            pstm.setString(2, password);
-            pstm.setInt(3, id);
+            pstm.setString(2, apellido);
+            pstm.setString(3, email);
+            pstm.setString(4, contrasena);
+            pstm.setString(5, pais);
+            pstm.setInt(6, id);
 
             int result = pstm.executeUpdate();
 
@@ -133,7 +156,7 @@ public class ClassConexion {
         System.out.println("Ingrese el ID del usuario a eliminar: ");
         int id = scan.nextInt();
 
-        String deleteQuery = "DELETE FROM usuario WHERE id_usuario = ?";
+        String deleteQuery = "DELETE FROM usuarios WHERE id = ?";
 
         try (PreparedStatement pstm = cn.prepareStatement(deleteQuery)) 
         {
@@ -156,7 +179,7 @@ public class ClassConexion {
 
         List<Usuario> usuarios = new ArrayList<>();
 
-        String selectQuery = "SELECT (name) FROM usuario";
+        String selectQuery = "SELECT * FROM usuarios";
 
 
         try (Statement stm = cn.createStatement();
@@ -168,12 +191,16 @@ public class ClassConexion {
 
             while (rs.next()) {
 
-                int id = rs.getInt("id_usuario");
-                String nombre = rs.getString("name");
-                String password = rs.getString("clave");
+                int id = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String email = rs.getString("email");
+                String contrasena = rs.getString("contrasena");
+                Date fechaNacimiento = rs.getDate("fecha_nacimiento");
+                String pais = rs.getString("pais");
 
                 
-                Usuario usuario = new Usuario(id, nombre, password);
+                Usuario usuario = new Usuario(id, nombre, apellido, email, contrasena, fechaNacimiento, pais);
                 usuarios.add(usuario);
             }
         } catch (SQLException e) {
@@ -181,8 +208,5 @@ public class ClassConexion {
             e.printStackTrace();
         }
         return usuarios;
-    } */
-
-
-
+    }
 }

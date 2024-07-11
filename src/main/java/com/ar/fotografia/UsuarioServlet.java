@@ -1,6 +1,7 @@
 package com.ar.fotografia;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,21 +32,40 @@ public class UsuarioServlet extends HttpServlet {
         Integer id = usuarioDAO.insertarUsuario(usuario);
         
         String jsonResponse = objectMapper.writeValueAsString(id);
-
         resp.setContentType("application/json");
-        
         resp.getWriter().write(jsonResponse);
 
         resp.setStatus(HttpServletResponse.SC_CREATED);
-
-        super.doPost(req, resp);
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        super.doGet(req, resp);
+        
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        resp.setCharacterEncoding("UTF-8");
+        req.setCharacterEncoding("UTF-8");
+
+        try {
+            List<Usuario> usuarios = usuarioDAO.getAllUsuarios();
+
+            String jsonResponse = objectMapper.writeValueAsString(usuarios);
+            resp.setContentType("application/json");
+            resp.getWriter().write(jsonResponse);
+
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID invalido");
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
+
 
 }

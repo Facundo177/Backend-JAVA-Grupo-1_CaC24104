@@ -3,7 +3,6 @@ package com.ar.fotografia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 public class UsuarioDAO {
 
     public Integer insertarUsuario(Usuario usuario){
-        String insertQuery = "INSERT INTO usuarios(nombre, apellido, email, contrasena, fecha_nacimiento, pais) VALUES(?, ?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO usuarios (nombre, apellido, email, contrasena, fecha_nacimiento, pais) VALUES (?, ?, ?, ?, ?, ?)";
 
         Conexion conexion = new Conexion();
 
@@ -19,11 +18,13 @@ public class UsuarioDAO {
             
             try (PreparedStatement pstm = cn.prepareStatement(insertQuery)) 
             {
+                java.sql.Date sqlFecha = new java.sql.Date(usuario.getFechaNacimiento().getTime());
+
                 pstm.setString(1, usuario.getNombre());
                 pstm.setString(2, usuario.getApellido());
                 pstm.setString(3, usuario.getEmail());
                 pstm.setString(4, usuario.getContrasena());
-                pstm.setDate(5, (java.sql.Date) usuario.getFechaNacimiento());
+                pstm.setDate(5, sqlFecha);
                 pstm.setString(6, usuario.getPais());
     
                 int result = pstm.executeUpdate();
@@ -44,11 +45,8 @@ public class UsuarioDAO {
                     return null;
                 }
     
-            } catch (SQLException e) {
-                System.err.println("Error al insertar el usuario");
-                e.printStackTrace();
-                return null;
             } catch (Exception e) {
+                System.err.println("Error al insertar el usuario");
                 e.printStackTrace();
                 return null;
             }
@@ -63,6 +61,9 @@ public class UsuarioDAO {
 
 
     public List<Usuario> getAllUsuarios(){
+
+        List<Usuario> usuarios = new ArrayList<>();
+
         String selectQuery = "SELECT * FROM usuarios";
 
         Conexion conexion = new Conexion();
@@ -73,33 +74,29 @@ public class UsuarioDAO {
             {
                 var rs = pstm.executeQuery();
                 
-                List<Usuario> usuarios = new ArrayList<>();
-                
                 while (rs.next()) { 
-                    Integer UserId = rs.getInt("id");
-                    String UserNombre = rs.getString("nombre");
-                    String UserApellido = rs.getString("apellido");
-                    String UserEmail = rs.getString("email");
-                    String UserContrasena = rs.getString("contrasena");
-                    Date UserFechaNacimiento = rs.getDate("fecha_nacimiento");
-                    String UserPais = rs.getString("pais");
+                    int id = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    String apellido = rs.getString("apellido");
+                    String email = rs.getString("email");
+                    String contrasena = rs.getString("contrasena");
+                    Date fechaNacimiento = new Date(rs.getDate("fecha_nacimiento").getTime());
+                    String pais = rs.getString("pais");
 
-                    Usuario usuario = new Usuario(UserId, UserNombre, UserApellido, UserEmail, UserContrasena, UserFechaNacimiento, UserPais);
+                    
+                    Usuario usuario = new Usuario(id, nombre, apellido, email, contrasena, fechaNacimiento, pais);
                     usuarios.add(usuario);
                 }
-                
-                return usuarios;
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
         } catch (Exception e) {
             System.err.println("Error al conectar la base de datos");
                 e.printStackTrace();
-                return null;
         }
+
+        return usuarios;
     }
     
-
 }
