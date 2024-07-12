@@ -20,6 +20,7 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -41,12 +42,12 @@
       <version>2.13.0</version>
     </dependency>
 
-    <!-- agrego dependencia para poder usar los controller con tecnología servlet-->
+    <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <scope>provided</scope>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <version>6.0.0</version>
+        <scope>provided</scope>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
@@ -58,6 +59,7 @@
     </dependency>
 
   </dependencies>
+
 
   <build>
     <finalName>webapp</finalName>
@@ -95,4 +97,5 @@
       </plugins>
     </pluginManagement>
   </build>
+  
 </project>

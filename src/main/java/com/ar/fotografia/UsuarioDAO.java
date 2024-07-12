@@ -3,6 +3,7 @@ package com.ar.fotografia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +17,7 @@ public class UsuarioDAO {
 
         try (Connection cn = conexion.conectar()) {
             
-            try (PreparedStatement pstm = cn.prepareStatement(insertQuery)) 
+            try (PreparedStatement pstm = cn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) 
             {
                 java.sql.Date sqlFecha = new java.sql.Date(usuario.getFechaNacimiento().getTime());
 
@@ -70,7 +71,7 @@ public class UsuarioDAO {
 
         try (Connection cn = conexion.conectar()) {
             
-            try (PreparedStatement pstm = cn.prepareStatement(selectQuery)) 
+            try (PreparedStatement pstm = cn.prepareStatement(selectQuery, Statement.RETURN_GENERATED_KEYS)) 
             {
                 var rs = pstm.executeQuery();
                 
@@ -83,7 +84,6 @@ public class UsuarioDAO {
                     Date fechaNacimiento = new Date(rs.getDate("fecha_nacimiento").getTime());
                     String pais = rs.getString("pais");
 
-                    
                     Usuario usuario = new Usuario(id, nombre, apellido, email, contrasena, fechaNacimiento, pais);
                     usuarios.add(usuario);
                 }
@@ -98,5 +98,6 @@ public class UsuarioDAO {
 
         return usuarios;
     }
+    
     
 }

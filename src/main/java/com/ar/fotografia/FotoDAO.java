@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class FotoDAO {
 
         try (Connection cn = conexion.conectar()) {
             
-            try (PreparedStatement pstm = cn.prepareStatement(insertQuery)) 
+            try (PreparedStatement pstm = cn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) 
             {
                 pstm.setString(1, foto.getUrlImagen());
                 pstm.setString(2, foto.getUrlFotografo());
@@ -52,10 +53,9 @@ public class FotoDAO {
 
         } catch (Exception e) {
             System.err.println("Error al conectar la base de datos");
-                e.printStackTrace();
-                return null;
-        }
-        
+            e.printStackTrace();
+            return null;
+        } 
     }
 
 
@@ -66,7 +66,7 @@ public class FotoDAO {
 
         try (Connection cn = conexion.conectar()) {
             
-            try (PreparedStatement pstm = cn.prepareStatement(selectQuery)) 
+            try (PreparedStatement pstm = cn.prepareStatement(selectQuery, Statement.RETURN_GENERATED_KEYS)) 
             {
                 var rs = pstm.executeQuery();
                 
@@ -96,4 +96,5 @@ public class FotoDAO {
         }
     }
 
+    
 }
